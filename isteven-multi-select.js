@@ -59,6 +59,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
 
             // settings based on input model property
             tickProperty    : '@',
+            idProperty      : '@',
             disableProperty : '@',
             groupProperty   : '@',
             searchProperty  : '@',  // 3.0.0 - OK
@@ -519,7 +520,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 var ctr                 = 0;
 
                 // refresh button label...
-                if ( $scope.outputModel.length === 0 ) {
+                if ( !$scope.outputModel || $scope.outputModel.length === 0 ) {
                     // https://github.com/isteven/angular-multi-select/pull/19
                     $scope.varButtonLabel = $scope.lang.nothingSelected;
                 }
