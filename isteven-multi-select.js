@@ -508,7 +508,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                     }
                     for(var i = 0; i < $scope.localModel.length; i++) {
                         var model = $scope.localModel[i];
-                        if($scope.ignoreOutputs.indexOf(model[$scope.idProperty]) !== -1)
+                        if($scope.ignoreOutputs && $scope.ignoreOutputs.indexOf(model[$scope.idProperty]) !== -1)
                             continue;
                         var outputModelIndex = $scope.tickedIds.indexOf(model[$scope.idProperty]);
                         //check for an add
@@ -565,7 +565,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                     }
 
                     angular.forEach( $scope.outputModel, function( value, key ) {
-                        if ( typeof value !== 'undefined' && $scope.ignoreOutputs.indexOf(value[$scope.idProperty]) === -1) {
+                        if ( typeof value !== 'undefined' && (!$scope.ignoreOutputs || $scope.ignoreOutputs.indexOf(value[$scope.idProperty]) === -1)) {
                             if ( ctr < tempMaxLabels ) {
                                 $scope.varButtonLabel += ( $scope.varButtonLabel.length > 0 ? '</div>, <div class="buttonLabel">' : '<div class="buttonLabel">') + $scope.writeLabel( value, 'buttonLabel' );
                             }
@@ -1113,3 +1113,4 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
     $templateCache.put( 'isteven-multi-select.htm' , template );
 
 }]);
+
