@@ -474,6 +474,8 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 clickedItem = angular.copy( item );
                 if ( clickedItem !== null ) {
                     $timeout( function() {
+                        if(!clickedItem)
+                            return; //due to the digest taking place, there may not be an item there
                         delete clickedItem[ $scope.indexProperty ];
                         delete clickedItem[ $scope.spacingProperty ];
                         $scope.onItemClick( { data: clickedItem } );
