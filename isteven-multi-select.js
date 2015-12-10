@@ -55,6 +55,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
             selectionMode   : '@',
             minSearchLength : '@',  // 3.0.0 - OK
             skipInputSync   : '=',
+            neverSyncInput  : '@',
             smartAdd        : '=',
             ignoreOutputs   : '=',
             buttonClass     : '@',
@@ -517,7 +518,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                         if(model[$scope.tickProperty] === true && outputModelIndex === -1) {
                             $scope.outputModel.push(model);
                             $scope.tickedIds.push(model[$scope.idProperty]);
-                        } else if(model[$scope.tickProperty] === false && outputModelIndex !== -1) {
+                        } else if(!model[$scope.tickProperty] && outputModelIndex !== -1) {
                             $scope.outputModel.splice(outputModelIndex, 1);
                             $scope.tickedIds.splice(outputModelIndex, 1);
                         }
@@ -963,22 +964,33 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 // watch1, for changes in input model property
                 // updates multi-select when user select/deselect a single checkbox programatically
                 // https://github.com/isteven/angular-multi-select/issues/8
-            $scope.$watch( 'inputModel' , function( newVal ) {
-                if ( newVal ) {
-                    $scope.localModel = angular.copy( $scope.inputModel );
-                    //create the localModel Map
-                    if($scope.idProperty) {
-                        $scope.localModelMap = {};
-                        for(var i = $scope.localModel.length -1; i >= 0; i--) {
-                            $scope.localModelMap[$scope.localModel[$scope.idProperty]] = $scope.localModel[i];
-                        }
-                    }
+            if(!$scope.neverSyncInput) {
+                $scope.$watch('inputModel', function (newVal) {
+                    if (newVal) {
+                        syncLocalModel();
 
-                    if (!$scope.skipInputSync)
-                        $scope.refreshOutputModel();
-                    $scope.refreshButton();
+                        if (!$scope.skipInputSync)
+                            $scope.refreshOutputModel();
+                        $scope.refreshButton();
+                    }
+                }, true);
+            } else {
+                syncLocalModel();
+                if (!$scope.skipInputSync)
+                    $scope.refreshOutputModel();
+                $scope.refreshButton();
+            }
+
+            function syncLocalModel() {
+                $scope.localModel = angular.copy( $scope.inputModel );
+                //create the localModel Map
+                if($scope.idProperty) {
+                    $scope.localModelMap = {};
+                    for(var i = $scope.localModel.length -1; i >= 0; i--) {
+                        $scope.localModelMap[$scope.localModel[$scope.idProperty]] = $scope.localModel[i];
+                    }
                 }
-            }, true );
+            }
 
             // watch2 for changes in input model as a whole
             // this on updates the multi-select when a user load a whole new input-model. We also update the $scope.backUp variable
