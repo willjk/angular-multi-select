@@ -98,6 +98,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
             $scope.tabIndex         = 0;
             $scope.lang             = {};
             $scope.localModel       = [];
+            $scope.searchProperty = attrs['searchProperty'] ? $scope.searchProperty : $scope.itemLabel;
 
             var
                 prevTabIndex        = 0,
@@ -155,17 +156,9 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                     if ( typeof $scope.localModel[ i ][ $scope.groupProperty ] === 'undefined' ) {
 
                         // If we set the search-key attribute, we use this loop.
-                        if ( typeof attrs.searchProperty !== 'undefined' && $scope.searchProperty !== '' ) {
-
-                            for (var key in $scope.localModel[ i ]  ) {
-                                if (
-                                    typeof $scope.localModel[ i ][ key ] !== 'boolean'
-                                    && String( $scope.localModel[ i ][ key ] ).toUpperCase().indexOf( $scope.inputLabel.labelFilter.toUpperCase() ) >= 0
-                                    && $scope.searchProperty.indexOf( key ) > -1
-                                ) {
-                                    gotData = true;
-                                    break;
-                                }
+                        if ( $scope.searchProperty !== undefined && attrs.searchProperty !== null && $scope.searchProperty !== '' ) {
+                            if (String( $scope.localModel[ i ][ $scope.searchProperty ] ).toUpperCase().indexOf( $scope.inputLabel.labelFilter.toUpperCase() ) >= 0) {
+                                gotData = true;
                             }
                         }
                         // if there's no search-key attribute, we use this one. Much better on performance.
@@ -614,8 +607,8 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
 
                 angular.forEach( temp, function( value, key ) {
                     item[ value ] && ( label += '&nbsp;' + value.split( '.' ).reduce( function( prev, current ) {
-                        return prev[ current ];
-                    }, item ));
+                            return prev[ current ];
+                        }, item ));
                 });
                 if ( type.toUpperCase() === 'BUTTONLABEL' ) {
                     return label;
@@ -961,9 +954,9 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
              *
              ****************************************************/
 
-                // watch1, for changes in input model property
-                // updates multi-select when user select/deselect a single checkbox programatically
-                // https://github.com/isteven/angular-multi-select/issues/8
+            // watch1, for changes in input model property
+            // updates multi-select when user select/deselect a single checkbox programatically
+            // https://github.com/isteven/angular-multi-select/issues/8
             if(!$scope.neverSyncInput) {
                 $scope.$watch('inputModel', function (newVal) {
                     if (newVal) {
