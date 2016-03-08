@@ -78,6 +78,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
             onReset         : '&',  // 3.0.0 - OK
             onSelectAll     : '&',  // 3.0.0 - OK
             onSelectNone    : '&',  // 3.0.0 - OK
+            onChange        : '&',
 
             // i18n
             translation     : '='   // 3.0.0 - OK
@@ -531,6 +532,11 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                                 }
                             }
                         }
+                    });
+                }
+                if($scope.onChange && typeof $scope.onChange === 'function') {
+                    $timeout(function(){
+                        $scope.onChange();
                     });
                 }
             }
