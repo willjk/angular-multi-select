@@ -68,8 +68,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
          */
                                                          
          templateUrl: 
-            'isteven-multi-select.htm',                            
-
+            'isteven-multi-select.htm',
         link: function ( $scope, element, attrs ) {                       
 
             $scope.backUp           = [];
@@ -227,7 +226,6 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
             // Depending on the size of filtered mode, might not good for performance, but oh well..
             $scope.getFormElements = function() {                                     
                 formElements = [];
-
                 var 
                     selectButtons   = [],
                     inputField      = [],
@@ -265,7 +263,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 for ( var i = 0; i < inputField.length ; i++ )      { formElements.push( inputField[ i ] );     }
                 for ( var i = 0; i < clearButton.length ; i++ )     { formElements.push( clearButton[ i ] );    }
                 for ( var i = 0; i < checkboxes.length ; i++ )      { formElements.push( checkboxes[ i ] );     }                                
-            }            
+            }        
 
             // check if an item has attrs.groupProperty (be it true or false)
             $scope.isGroupMarker = function( item , type ) {
@@ -591,7 +589,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                     return label;
                 }
                 return $sce.trustAsHtml( label );
-            }                                
+            }
 
             // UI operations to show/hide checkboxes based on click event..
             $scope.toggleCheckboxes = function( e ) {                                    
@@ -700,7 +698,7 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 }, 0 );
 
                 // set focus on button again
-                element.children().children()[ 0 ].focus();
+                //element.children().children()[ 0 ].focus();
             }
    
             // select All / select None / reset buttons
@@ -1003,9 +1001,95 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 $scope.$apply( function() {
                     scrolled = true;                
                 });
-            });                                   
+            });
+			
+			//$scope.toggleCheckboxes();                              
         }
     }
+}])
+.directive('iStevenMultiSelectRow', [function(){
+	var directive = {
+			restrict: 'E',
+			scope: {
+				syncItems: '&',
+				tickProperty: '@',
+				orientation: '@',
+				spacingProperty: '@',
+				groupProperty: '@',
+				disabledProperty: '@',
+				disabled: '&',
+				item: '=',
+				tickMarker: '='
+			},
+			require: 'istevenMultiSelect^',
+			template: '<div '+
+                        //'ng-repeat="item in filteredModel | filter:removeGroupEndMarker" ' + 
+						'class="multiSelectItem" '+
+                        'ng-class="{selected: item[ tickProperty ], horizontal: orientation === \'h\', vertical: orientation === \'v\', multiSelectGroup:item[ groupProperty ], disabled:itemIsDisabled( item )}"'+
+                        'ng-click="syncItems( item, $event, $index );" '+
+                        'ng-mouseleave="removeFocusStyle( tabIndex );"> '+
+                        // this is the spacing for grouped items
+                        '<div class="acol" ng-if="item[ spacingProperty ] > 0" ng-repeat="i in numberToArray( item[ spacingProperty ] ) track by $index">'+                        
+                    	'</div>  '+        
+						'<div class="acol">'+
+							'<label>'+                                
+								// input, so that it can accept focus on keyboard click
+								'<input class="checkbox focusable" type="checkbox" '+
+									'ng-disabled="itemIsDisabled( item )" '+
+									'ng-checked="item[ tickProperty ]" '+
+									'ng-click="syncItems( item, $event, $index )" />'+
+								// item label using ng-bind-hteml
+								'<span '+
+									'ng-class="{disabled:itemIsDisabled( item )}" '+
+									'ng-bind-html="writeLabel( item, \'itemLabel\' )">'+
+								'</span>'+
+							'</label>'+
+						'</div>'+
+						// the tick/check mark
+						'<span class="tickMark" ng-if="item[ groupProperty ] !== true && item[ tickProperty ] === true" ng-bind-html="tickMarker"></span>'+
+                '</div>',
+			link: link
+		};
+
+		return directive;
+
+		function link(scope, elem, attrs, ctrl) {
+
+
+			scope.syncItems = syncItems;
+
+			scope.numberToArray = numberToArray;
+			
+			scope.itemIsDisabled = itemIsDisabled;
+			
+			scope.removeFocusStyle = removeFocusStyle;
+			
+			function removeFocusStyle(){
+				elem.removeClass( 'multiSelectFocus' );
+			}
+			
+			function itemIsDisabled( item ) {
+				var itemIsDisabledReturn = false;
+                
+                if ( typeof attrs.disableProperty !== 'undefined' && item[ attrs.disableProperty ] === true ) {                                        
+                    itemIsDisabledReturn = true;
+                }
+                else {
+					itemIsDisabledReturn = $scope.isDisabled === true;
+                }		
+				return itemIsDisabledReturn;            
+            }
+			
+			debugger;
+
+			function numberToArray(num) {
+				return new Array(num);
+			}
+
+			function syncItems($event) {
+
+			}
+		}
 }]).run( [ '$templateCache' , function( $templateCache ) {
     var template = 
         '<span class="multiSelect inlineBlock">' +
@@ -1062,23 +1146,23 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                         'ng-mouseleave="removeFocusStyle( tabIndex );"> '+
                         // this is the spacing for grouped items
                         '<div class="acol" ng-if="item[ spacingProperty ] > 0" ng-repeat="i in numberToArray( item[ spacingProperty ] ) track by $index">'+                        
-                    '</div>  '+        
-                    '<div class="acol">'+
-                        '<label>'+                                
-                            // input, so that it can accept focus on keyboard click
-                            '<input class="checkbox focusable" type="checkbox" '+
-                                'ng-disabled="itemIsDisabled( item )" '+
-                                'ng-checked="item[ tickProperty ]" '+
-                                'ng-click="syncItems( item, $event, $index )" />'+
-                            // item label using ng-bind-hteml
-                            '<span '+
-                                'ng-class="{disabled:itemIsDisabled( item )}" '+
-                                'ng-bind-html="writeLabel( item, \'itemLabel\' )">'+
-                            '</span>'+
-                        '</label>'+
-                    '</div>'+
-                    // the tick/check mark
-                    '<span class="tickMark" ng-if="item[ groupProperty ] !== true && item[ tickProperty ] === true" ng-bind-html="icon.tickMark"></span>'+
+                    	'</div>  '+        
+						'<div class="acol">'+
+							'<label>'+                                
+								// input, so that it can accept focus on keyboard click
+								'<input class="checkbox focusable" type="checkbox" '+
+									'ng-disabled="itemIsDisabled( item )" '+
+									'ng-checked="item[ tickProperty ]" '+
+									'ng-click="syncItems( item, $event, $index )" />'+
+								// item label using ng-bind-hteml
+								'<span '+
+									'ng-class="{disabled:itemIsDisabled( item )}" '+
+									'ng-bind-html="writeLabel( item, \'itemLabel\' )">'+
+								'</span>'+
+							'</label>'+
+						'</div>'+
+						// the tick/check mark
+						'<span class="tickMark" ng-if="item[ groupProperty ] !== true && item[ tickProperty ] === true" ng-bind-html="icon.tickMark"></span>'+
                 '</div>'+
             '</div>'+
         '</div>'+
