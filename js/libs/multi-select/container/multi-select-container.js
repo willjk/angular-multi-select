@@ -1,6 +1,6 @@
 (function() {
-	angular.module('isteven-multi-select.container', ['isteven-multi-select.filters', 'isteven-multi-select.list', 'isteven-multi-select.off-click'])
-		.directive('iStevenMultiSelectContainer', ['$sce', '$filter', function($sce, $filter) {
+	angular.module('isteven-multi-select', ['isteven-multi-select.filters', 'isteven-multi-select.list', 'isteven-multi-select.off-click', 'templates'])
+		.directive('iStevenMultiSelect', ['$sce', '$filter', function($sce, $filter) {
 			var directive = {
 				restrict: 'E',
 				scope: {
@@ -21,16 +21,18 @@
 					//attributes
 					groupProperty: '@',
 					tickProperty: '@',
+					disableProperty: '@',
 					directiveId: '@',
 					orientation: '@',
 					itemLabel: '@',
+					hideSelect: '@', //will make dropdown autoshow if it is hidden
+					filterProperties: '@',
 
 					// i18n
 					translation: '='
 				},
-				templateUrl: 'iStevenMultiSelectContainer.html',
-				controller: controller//, //The controller handles inner directives talking to an outer directive(controller of all inner baby directives)
-				//link: link //Handles manipulation of the dom, changes based on attributes assigned to this element
+				templateUrl: 'container/iStevenMultiSelectContainer.html',
+				controller: controller//The controller handles inner directives talking to an outer directive(controller of all inner baby directives)
 			};
 
 			return directive;
@@ -49,6 +51,7 @@
 				$scope.buttonLabel = $attrs.buttonLabel ? $attrs.buttonLabel : $attrs.nothingSelected ? $attrs.nothingSelected : 'Nothing Selected <span class="caret"></span>';
 				$scope.tabIndex = 0;
 				$scope.filteredModel = [];
+				$scope.maxHeight = $attrs.hasOwnProperty('maxHeight') ? $attrs.maxHeight : '';
 				$scope.helperStatus = {
 					all: true,
 					none: true,
@@ -67,6 +70,7 @@
 				$scope.ignoreProperties = [$scope.tickProperty, $scope.groupProperty];
 				//$scope.itemLabel = $attrs.itemLabel;
 				$scope.showDropdown = false;
+				$scope.maxLabels = $attrs.maxLabels;
 
 				//Functions children directives have access too
 				this.registerListDirective = registerListDirective;
@@ -87,40 +91,49 @@
 
 				$scope.writeButtonLabel();
 
+				$attrs.$observe('maxLabels', function(nVal) {
+					$scope.maxLabels = $attrs.maxLabels;
+					$scope.writeButtonLabel();
+				});
+
 				$scope.$watch('inputModel', function(nVal) {
 					if (nVal !== undefined) {
 						$scope.calculateSpacingBasedOnGrouping();
 					}
-
 				}, true);
 
 				function keyboardListener() {
 
 				};
-				
-				function offClick(){
-					if(!$scope.showDropdown){
+
+				function offClick() {
+					if (!$scope.showDropdown) {
 						return;
 					}
 					$scope.toggleCheckboxes();
-					$scope.onClose();
 				}
 
 				function selectAll() {
 					selectedGroupProperty(0, true, true);
+					$scope.onSelectAll();
 				}
 
 				function selectNone() {
 					selectedGroupProperty(0, true, false);
+					$scope.onSelectNone();
 				};
+				
+				function isItemDisabled(item){
+					return ($scope.isDisabled == 'true' || (item.hasOwnProperty($scope.disableProperty) && item[$scope.disableProperty] === true))
+				}
 
 				//to lazy to optimize. can be optimized later
 				//when a grouped item is selected it turns selects or deselects all values within that group
 				function selectedGroupProperty(inputModelIndex, force, forceValue) {
 					$scope.filteredModel = [];
 					force = force !== undefined ? force : false;
-					var filteredInputModel = $filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties), 
-					length = filteredInputModel.length, groupNestCount = 0, endGroupIndex = inputModelIndex, allTicked = true;
+					var filteredInputModel = $filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties),
+						length = filteredInputModel.length, groupNestCount = 0, endGroupIndex = inputModelIndex, allTicked = true;
 					for (var i = inputModelIndex; i < length; i++) {
 						if (force) { //we are forcing. no need to loop through this.
 							//set all ticked to the inverse of the forceValue(when we set the tick we set it to inverse allTicked below)
@@ -133,7 +146,7 @@
 								endGroupIndex = i;
 								break;
 							}
-						} else if (!filteredInputModel[i][$scope.tickProperty]) {
+						} else if (!filteredInputModel[i][$scope.tickProperty] && !isItemDisabled(filteredInputModel[i])) {
 							allTicked = false;
 							break;
 						}
@@ -147,55 +160,33 @@
 								break;
 							}
 						} else {
-							filteredInputModel[j][$scope.tickProperty] = !allTicked;
-							itemClicked(j, filteredInputModel[j][$scope.tickProperty]);
-							if (!allTicked) {
-								$scope.filteredModel.push(filteredInputModel[j]);
+							if (!isItemDisabled(filteredInputModel[j])) {
+								filteredInputModel[j][$scope.tickProperty] = !allTicked;
+								itemClicked(j, filteredInputModel[j][$scope.tickProperty]);
+								if (!allTicked) {
+									$scope.filteredModel.push(filteredInputModel[j]);
+								}
 							}
+
 						}
 					}
-					// for (var i = inputModelIndex; i < length; i++) {
-					// 	if (force) { //we are forcing. no need to loop through this.
-					// 		//set all ticked to the inverse of the forceValue(when we set the tick we set it to inverse allTicked below)
-					// 		allTicked = !forceValue;
-					// 		break;
-					// 	}
-					// 	if ($scope.inputModel[i].hasOwnProperty($scope.groupProperty)) {
-					// 		groupNestCount = $scope.inputModel[i][$scope.groupProperty] === true ? groupNestCount + 1 : groupNestCount - 1;
-					// 		if (groupNestCount === 0) {
-					// 			endGroupIndex = i;
-					// 			break;
-					// 		}
-					// 	} else if (!$scope.inputModel[i][$scope.tickProperty]) {
-					// 		allTicked = false;
-					// 		break;
-					// 	}
-					// }
-					// groupNestCount = 0;
-					// for (var j = inputModelIndex; j < length; j++) {
-					// 	if ($scope.inputModel[j].hasOwnProperty($scope.groupProperty)) {
-					// 		groupNestCount = $scope.inputModel[j][$scope.groupProperty] === true ? groupNestCount + 1 : groupNestCount - 1;
-					// 		if (groupNestCount === 0) {
-					// 			endGroupIndex = i;
-					// 			break;
-					// 		}
-					// 	} else {
-					// 		$scope.inputModel[j][$scope.tickProperty] = !allTicked;
-					// 		itemClicked(j, $scope.inputModel[j][$scope.tickProperty]);
-					// 		if (!allTicked) {
-					// 			$scope.filteredModel.push($scope.inputModel[j]);
-					// 		}
-					// 	}
-					// }
 					writeButtonLabel();
 				}
 
 				function writeButtonLabel() {
-					var length = $scope.outputModel.length, label = '';
+					var length = $scope.outputModel.length, label = '', labelCount = 0, maxLabels = parseInt($scope.maxLabels);
 					if (length === 0) {
 						label = $attrs.buttonLabel ? $attrs.buttonLabel : $attrs.nothingSelected ? $attrs.nothingSelected : 'Nothing Selected ';
 					}
+					if (maxLabels === 0 && length !== 0) {
+						label = '(' + length + ')';
+						length = 0;
+					}
 					for (var i = 0; i < length; i++) {
+						if (maxLabels !== -1 && maxLabels <= i) {
+							label += '...(' + (length - i).toString() + ')';
+							break;
+						}
 						label += writeLabel($scope.outputModel[i], true);
 						if (i + 1 < length) {
 							label += ', ';
@@ -266,53 +257,6 @@
 					return $scope.listDirectiveCount;
 				}
 
-				// // select All / select None / reset buttons
-				// function select(type, e) {
-
-				// 	var helperIndex = helperItems.indexOf(e.target), functionToCall = '';
-				// 	$scope.tabIndex = helperIndex;
-
-				// 	switch (type.toUpperCase()) {
-				// 		case 'ALL':
-				// 			loopFilterModelSetTickProperty(false, true);
-				// 			functionToCall = 'onSelectAll';
-				// 			break;
-				// 		case 'NONE':
-				// 			loopFilterModelSetTickProperty(false, false);
-				// 			functionToCall = 'onSelectNone';
-				// 			break;
-				// 		case 'RESET':
-				// 			loopFilterModelSetTickProperty(true);
-				// 			functionToCall = 'onReset';
-				// 			break;
-				// 		case 'CLEAR':
-				// 			$scope.tabIndex = $scope.tabIndex + 1;
-				// 			$scope.onClear();
-				// 			break;
-				// 		case 'FILTER':
-				// 			$scope.tabIndex = helperItems.length - 1;
-				// 			break;
-				// 	}
-
-				// 	if (functionToCall !== '') {
-				// 		$scope.refreshOutputModel();
-				// 		$scope.refreshButton();
-				// 		$scope[functionToCall]();
-				// 	}
-				// }
-
-				// function loopFilterModelSetTickProperty(reset, setValue) {
-				// 	var len = $scope.filteredModel.length, currentFilterModelValue;
-				// 	for (var i = 0; i < len; i++) {
-				// 		currentFilterModelValue = $scope.filteredModel[i];
-				// 		if (typeof currentFilterModelValue !== 'undefined'
-				// 			&& currentFilterModelValue.hasOwnProperty(scope.groupProperty)
-				// 			&& !currentFilterModelValue[scope.disableProperty]) {
-				// 			currentFilterModelValue[$scope.tickProperty] = reset ? $scope.backUp[currentFilterModelValue[$scope.indexProperty]][$scope.tickProperty] : setValue;
-				// 		}
-				// 	}
-				// }
-
 				function generateSafeHtml(text) {
 					return $sce.trustAsHtml(text);
 				}
@@ -320,7 +264,11 @@
 				// UI operations to show/hide checkboxes based on click event..
 				function toggleCheckboxes(e) {
 					$scope.showDropdown = !$scope.showDropdown;
-					$scope.onOpen();
+					if ($scope.showDropdown) {
+						$scope.onOpen();
+					} else {
+						$scope.onClose();
+					}
 				}
 
 				function addRemoveShowClassToButtonClickedAndCheckboxLayer(clickedEl, classFunction) {
@@ -349,31 +297,7 @@
 				function checkIfGroupFalse(item) {
 					return (!item.hasOwnProperty($scope.groupProperty) || item[$scope.groupProperty]);
 				}
-				
+
 			}
-		}])
-		.run(['$templateCache', function($templateCache) {
-			$templateCache.put('iStevenMultiSelectContainer.html',
-				'<span class="multiSelect" click-anywhere-but-here="offClick()">' +
-				'<button id="{{directiveId}}" type="button"' +
-                'ng-click="toggleCheckboxes( $event )"' +
-                'ng-bind-html="buttonLabel"' +
-                'ng-disabled="disable-button"' +
-				'>' +
-				'</button>' +
-				'	<div class="checkboxLayer" ng-class="{\'show\': showDropdown}">' +
-				'	<div class="helperContainer">' +
-				'		<i-steven-multi-select-filters icon="icon" lang="lang" v-min-search-length="" update-filter="" search="search" search-changed="" select-all="selectAll()" select-none="selectNone()" select=""></i-steven-multi-select-filters>' +
-				'	</div>' +
-				'	<div class="checkBoxContainer">' +
-				'		<div ng-repeat="item in inputModel | isteven: search : ignoreProperties" ng-if="checkIfGroupFalse(item)">' +
-				'			<i-steven-multi-select-list ' +
-				'			item="item" tick-marker="{{icon.tickMark}}" is-disabled="{{isDisabled}}" index="{{$index}}" tick-property="{{tickProperty}}" orientation="{{orientation}}" group-property="{{groupProperty}}" ' +
-				'			spacing-property="{{spacingBasedOnGrouping[$index]}}" item-label="{{itemLabel}}"></i-steven-multi-select-list>' +
-				'		</div>' +
-				'	</div>' +
-				'</div>' +
-				'</span>'
-			)
 		}]);
 })();

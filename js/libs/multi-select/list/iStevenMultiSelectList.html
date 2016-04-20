@@ -1,0 +1,10 @@
+<div class="multiSelectItem" ng-class="{selected: item[ tickProperty ], horizontal: orientation !== 'v', vertical: orientation === 'v', multiSelectGroup:item[ groupProperty ], disabled:itemIsDisabled( item )}"
+ng-click="onClickSyncItems( $event, $index );" ng-mouseleave="removeStyle( 'multiSelectFocus' );">
+	<div class="acol" ng-if="spacingProperty > 0" ng-repeat="i in numberToArray( spacingProperty ) track by $index"></div>
+	<div class="acol">
+		<label>
+			<input class="checkbox focusable" type="checkbox" ng-disabled="itemIsDisabled( item )" ng-checked="item[ tickProperty ]"
+			ng-click="syncItems( item, $event, $index )" /><span ng-class="{disabled:itemIsDisabled( item )}" ng-bind-html="writeLabel('itemLabel' )"></span></label>
+	</div>
+	<span class="tickMark" ng-if="item[ groupProperty ] !== true && item[ tickProperty ] === true">&#10003;</span>
+</div>

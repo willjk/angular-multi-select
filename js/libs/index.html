@@ -9,26 +9,54 @@
 	<script src="jquery.min.js"></script>
 	<script src="bootstrap.min.js"></script>
 	<script src="angular.min.js"></script>
-
-	<script src="./multi-select/multi-select-filters.js"></script>
-	<script src="./multi-select/multi-select-list.js"></script>
-	<script src="./multi-select/multi-select-off-click.js"></script>
-	<script src="./multi-select/multi-select-container.js"></script>
+	<script src="../../../dist/js/templates.js"></script>
+	<script src="../../../dist/js/app.js"></script>
 </head>
 
 <body ng-app="myApp">
 	<div ng-controller="myController">
-		<i-steven-multi-select-container input-model="inputModel" output-model="outputModel" is-disabled="isDisabled" item-label="icon name maker" group-property="msGroup"
-		tick-property="selected" orientation="v"></i-steven-multi-select-container>
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-6">
+					<i-steven-multi-select input-model="inputModel" output-model="outputModel" hide-select="{{hideSelect}}" is-disabled="isDisabled" item-label="icon name maker" group-property="msGroup"
+		tick-property="selected" filter-properties="name maker" max-labels="{{maxLabels}}" disable-property="disabled" orientation="v"></i-steven-multi-select-container>
+				</div>
+				<div class="col-xs-6">
+					<button type="button" class="btn" ng-click="inverseHideSelect()">Toggle hiding select</button>
+					<button type="button" class="btn" ng-click="maxLabels = maxLabels + 1">+</button>
+					<button type="button" class="btn" ng-click="maxLabels = maxLabels - 1">-</button>
+					<button type="button" class="btn" ng-click="inputModel[3].disabled = !inputModel[3].disabled">Toggle disable</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </body>
 <script>
-	angular.module('myApp', ['isteven-multi-select.container'])
-		.controller('myController', function($scope){
+	angular.module('myApp', ['isteven-multi-select'])
+		.controller('myController', function($scope, $timeout){
 			
 			$scope.itemLabel = 'icon name maker';
 			
-			$scope.inputModel=$scope.webBrowsersGrouped = [
+			$scope.hideSelect = false;
+			$scope.maxLabels = 3;
+			
+			$scope.inverseHideSelect = function(){
+				$scope.hideSelect = !$scope.hideSelect;
+			};
+			
+			$scope.searchChanged = function(){
+				console.log('searchChanged');
+			}
+			
+			$scope.onOpen = function(){
+				console.log('opened');
+			}
+			
+			$scope.onClose = function(){
+				console.log('closed');
+			}
+			
+			$scope.inputModel = [
 				{
 					name: '<strong>All Browsers</strong>',
 					msGroup: true
@@ -47,7 +75,8 @@
 					icon: '<img  src="https://cdn1.iconfinder.com/data/icons/fatcow/32/internet_explorer.png" />',             
 					name: 'Internet Explorer',  
 					maker: '(Microsoft)',
-					ticked: false   
+					ticked: false,
+					disabled: true
 				},
 				{ 
 					icon: '<img  src="https://cdn1.iconfinder.com/data/icons/humano2/32x32/apps/firefox-icon.png" />',         

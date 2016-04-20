@@ -13,8 +13,8 @@
 					tickProperty: '@',
 					tickMarker: '@'
 				},
-				require: '^iStevenMultiSelectContainer',
-				templateUrl: 'iStevenMultiSelectList.html',
+				require: '^iStevenMultiSelect',
+				templateUrl: 'list/iStevenMultiSelectList.html',
 				link: link
 			};
 
@@ -47,21 +47,6 @@
 						return $sce.trustAsHtml(scope.item.name);
 					}
 					return ctrl.writeLabel(scope.item, false);
-					
-					// // type is either 'itemLabel' or 'buttonLabel'
-					// var temp = scope.itemLabel.split(' ');
-					// var label = '';
-
-					// angular.forEach(temp, function(value, key) {
-					// 	scope.item[value] && (label += '&nbsp;' + value.split('.').reduce(function(prev, current) {
-					// 		return prev[current];
-					// 	}, scope.item));
-					// });
-
-					// if (type.toUpperCase() === 'BUTTONLABEL') {
-					// 	return label;
-					// }
-					// return $sce.trustAsHtml(label);
 				}
 
 				function onClickSyncItems(e, ng_repeat_index) {
@@ -69,7 +54,7 @@
 					e.stopPropagation();
 
 					//if isDisabled is boolean or string true do nothing, if this is a 
-					if (scope.isDisabled == 'true') {
+					if (itemIsDisabled()) {
 						return;
 					}
 					
@@ -86,8 +71,7 @@
 				}
 
 				function itemIsDisabled() {
-					return scope.isDisabled == 'true';
-					//return (attrs.hasOwnProperty('disableProperty') && scope.item[attrs.disableProperty] === 'true') || scope.isDisabled === true;
+					return (scope.isDisabled == 'true' || (attrs.hasOwnProperty('disableProperty') && scope.item.hasOwnProperty(attrs.disableProperty) && scope.item[attrs.disableProperty] === true));
 				}
 
 				function addStyle(classToAdd) {
@@ -99,35 +83,5 @@
 				}
 			}
 
-		}])
-		.run(['$templateCache', function($templateCache) {
-			$templateCache.put('iStevenMultiSelectList.html',
-				'<div ' +
-				'class="multiSelectItem" ' +
-				'ng-class="{selected: item[ tickProperty ], horizontal: orientation !== \'v\', vertical: orientation === \'v\', ' +
-				'multiSelectGroup:item[ groupProperty ], disabled:itemIsDisabled( item )}"' +
-				'ng-click="onClickSyncItems( $event, $index );" ' +
-				'ng-mouseleave="removeStyle( \'multiSelectFocus\' );"> ' +
-				// this is the spacing for grouped items
-				'<div class="acol" ng-if="spacingProperty > 0" ng-repeat="i in numberToArray( spacingProperty ) track by $index">' +
-				'</div>  ' +
-				'<div class="acol">' +
-				'<label>' +
-				// input, so that it can accept focus on keyboard click
-				'<input class="checkbox focusable" type="checkbox" ' +
-				'ng-disabled="itemIsDisabled( item )" ' +
-				'ng-checked="item[ tickProperty ]" ' +
-				'ng-click="syncItems( item, $event, $index )" />' +
-				// item label using ng-bind-hteml
-				'<span ' +
-				'ng-class="{disabled:itemIsDisabled( item )}" ' +
-				'ng-bind-html="writeLabel(\'itemLabel\' )">' +
-				'</span>' +
-				'</label>' +
-				'</div>' +
-				// the tick/check mark
-				'<span class="tickMark" ng-if="item[ groupProperty ] !== true && item[ tickProperty ] === true">&#10003;</span>' +
-                '</div>'
-			);
 		}]);
 })();

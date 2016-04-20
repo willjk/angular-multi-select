@@ -1,0 +1,19 @@
+<span class="multiSelect" click-anywhere-but-here="offClick()">
+	<button ng-hide="hideSelect == 'true'" id="{{directiveId}}" type="button"
+	ng-click="toggleCheckboxes( $event )"
+	ng-bind-html="buttonLabel"
+	ng-disabled="disable-button"
+	></button>
+	<div class="checkboxLayer" ng-class="{'show': showDropdown || hideSelect == 'true'}">
+		<div class="helperContainer">
+			<i-steven-multi-select-filters icon="icon" lang="lang" v-min-search-length="" update-filter="" search="search" search-changed="onSearchChange()" select-all="selectAll()" select-none="selectNone()" select=""></i-steven-multi-select-filters>
+		</div>
+		<div class="checkBoxContainer">
+			<div ng-repeat="item in inputModel | isteven: search : ignoreProperties : filterProperties : maxLabels" ng-if="checkIfGroupFalse(item)">
+				<i-steven-multi-select-list 
+				item="item" tick-marker="{{icon.tickMark}}" is-disabled="{{isDisabled == 'true'}}" disable-property="{{disableProperty}}" index="{{$index}}" tick-property="{{tickProperty}}" orientation="{{orientation}}" group-property="{{groupProperty}}" 
+				spacing-property="{{spacingBasedOnGrouping[$index]}}" item-label="{{itemLabel}}"></i-steven-multi-select-list>
+			</div>
+		</div>
+	</div>
+</span>
