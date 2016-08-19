@@ -9,10 +9,13 @@
 			<i-steven-multi-select-filters icon="icon" lang="lang" v-min-search-length="" update-filter="" search="search" search-changed="onSearchChange()" select-all="selectAll()" select-none="selectNone()" select=""></i-steven-multi-select-filters>
 		</div>
 		<div class="checkBoxContainer">
-			<div ng-repeat="item in inputModel | isteven: search : ignoreProperties : filterProperties : maxLabels" ng-if="checkIfGroupFalse(item)">
+			<div ng-class="listCss">
+			<div ng-repeat="item in inputModel | isteven: search : ignoreProperties : filterProperties : maxLabels"  ng-if="checkIfGroupFalse(item)">
 				<i-steven-multi-select-list 
-				item="item" tick-marker="{{icon.tickMark}}" is-disabled="{{isDisabled == 'true'}}" disable-property="{{disableProperty}}" index="{{$index}}" tick-property="{{tickProperty}}" orientation="{{orientation}}" group-property="{{groupProperty}}" 
+				item="item" tick-marker="{{icon.tickMark}}" is-disabled="{{isDisabled == 'true'}}" disable-property="{{disableProperty}}" index="{{$index}}" 
+				tick-property="{{tickProperty}}" orientation="{{orientation}}" group-property="{{groupProperty}}" 
 				spacing-property="{{spacingBasedOnGrouping[$index]}}" item-label="{{itemLabel}}"></i-steven-multi-select-list>
+			</div>
 			</div>
 		</div>
 	</div>

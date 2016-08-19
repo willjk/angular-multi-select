@@ -27,6 +27,7 @@
 					itemLabel: '@',
 					hideSelect: '@', //will make dropdown autoshow if it is hidden
 					filterProperties: '@',
+					listCss: '@',
 
 					// i18n
 					translation: '='

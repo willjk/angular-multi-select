@@ -6,6 +6,12 @@
 	<link rel='stylesheet' href="../../css/bootstrap.min.css" />
 	<link rel='stylesheet' href="../../css/isteven-multi-select.css" />
 	<link rel='stylesheet' href="../../css/style.css" />
+	<style>
+		.list-overflow {
+			overflow-y: auto;
+			height: 250px;
+		}	
+	</style>
 	<script src="jquery.min.js"></script>
 	<script src="bootstrap.min.js"></script>
 	<script src="angular.min.js"></script>
@@ -19,7 +25,7 @@
 			<div class="row">
 				<div class="col-xs-6">
 					<i-steven-multi-select input-model="inputModel" output-model="outputModel" hide-select="{{hideSelect}}" is-disabled="isDisabled" item-label="icon name maker" group-property="msGroup"
-		tick-property="selected" filter-properties="name maker" max-labels="{{maxLabels}}" disable-property="disabled" orientation="v"></i-steven-multi-select-container>
+		tick-property="selected" filter-properties="name maker" max-labels="{{maxLabels}}" disable-property="disabled" list-css="list-overflow" orientation="v"></i-steven-multi-select-container>
 				</div>
 				<div class="col-xs-6">
 					<button type="button" class="btn" ng-click="inverseHideSelect()">Toggle hiding select</button>
