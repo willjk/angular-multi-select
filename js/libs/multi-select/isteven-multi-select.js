@@ -579,8 +579,8 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                 var temp    = attrs[ type ].split( ' ' );                    
                 var label   = '';                
 
-                angular.forEach( temp, function( value, key ) {                    
-                    item[ value ] && ( label += '&nbsp;' + value.split( '.' ).reduce( function( prev, current ) {
+                angular.forEach( temp, function( value, key ) {                
+                    item[ value ] || ( label += '&nbsp;' + value.split( '.' ).reduce( function( prev, current ) {
                         return prev[ current ]; 
                     }, item ));        
                 });
@@ -589,7 +589,8 @@ angular.module( 'isteven-multi-select', ['ng'] ).directive( 'istevenMultiSelect'
                     return label;
                 }
                 return $sce.trustAsHtml( label );
-            }                                
+            }
+                          
 
             // UI operations to show/hide checkboxes based on click event..
             $scope.toggleCheckboxes = function( e ) {                                    
