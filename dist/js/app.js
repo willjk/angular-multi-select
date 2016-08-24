@@ -1108,22 +1108,36 @@ angular.module('isteven-multi-select', ['ng']).directive('istevenMultiSelect', [
                     isButtonLabel = type.toUpperCase() === 'BUTTONLABEL';
 
                 angular.forEach(temp, function (value, key) {
-
-                    if (isButtonLabel) {
-                        item[value] && (label += '&nbsp;' + value.split('.').reduce(function (prev, current) {
-                            return prev[current];
-                        }, item));
+                    if(isButtonLabel) {
+                        label += '&nbsp;' + getNestedValueFromObject(item, value);
                     } else {
-                        item[value] || (label += '&nbsp;' + value.split('.').reduce(function (prev, current) {
-                            return prev[current];
-                        }, item));
+                        label = getNestedValueFromObject(item, value);
                     }
+                    // item = getNestedValueFromObject(item, value);
+
+                    // if (isButtonLabel) {
+                    //     item[value] && (label += '&nbsp;' + value.split('.').reduce(function (prev, current) {
+                    //         return prev[current];
+                    //     }, item));
+                    // } else {
+                    //     item[value] || (label += '&nbsp;' + value.split('.').reduce(function (prev, current) {
+                    //         return prev[current];
+                    //     }, item));
+                    // }
                 });
 
                 if (isButtonLabel) {
                     return label;
                 }
                 return $sce.trustAsHtml(label);
+            }
+
+            function getNestedValueFromObject(obj, properties){
+                var tempObj, props = properties.split('.'), propsLength = props.length;
+                for(var i = 0; i < propsLength; i++){
+                    tempObj = properties[i];
+                }
+                return tempObj;
             }
 
 
