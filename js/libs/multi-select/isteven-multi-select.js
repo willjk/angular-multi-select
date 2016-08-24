@@ -582,7 +582,7 @@ angular.module('isteven-multi-select', ['ng']).directive('istevenMultiSelect', [
                     if(isButtonLabel) {
                         label += '&nbsp;' + getNestedValueFromObject(item, value);
                     } else {
-                        label = getNestedValueFromObject(item, value);
+                        label += getNestedValueFromObject(item, value) + ' ';
                     }
                     // item = getNestedValueFromObject(item, value);
 
