@@ -1135,7 +1135,7 @@ angular.module('isteven-multi-select', ['ng']).directive('istevenMultiSelect', [
             function getNestedValueFromObject(obj, properties){
                 var tempObj, props = properties.split('.'), propsLength = props.length;
                 for(var i = 0; i < propsLength; i++){
-                    tempObj = properties[i];
+                    tempObj = obj[properties[i]];
                 }
                 return tempObj;
             }
