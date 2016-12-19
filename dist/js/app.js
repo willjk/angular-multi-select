@@ -264,7 +264,7 @@
 			return directive;
 
 			function controller($scope, $element, $attrs) {
-
+				$scope.hideSelect = !$attrs.hideSelect ? 'false' : $attrs.hideSelect == 'true';
 				$scope.registeredListDirectives = []; //we use this so we don't have to get a bunch of children elements
 				$scope.listDirectiveCount = 0;
 				$scope.spacingBasedOnGrouping = [];
