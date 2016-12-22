@@ -177,7 +177,7 @@
 				function writeButtonLabel() {
 					var length = $scope.outputModel.length, label = '', labelCount = 0, maxLabels = parseInt($scope.maxLabels);
 					if (length === 0) {
-						label = $attrs.buttonLabel ? $attrs.buttonLabel : $attrs.nothingSelected ? $attrs.nothingSelected : 'Nothing Selected ';
+						label = $attrs.nothingSelected ? $attrs.nothingSelected : 'Nothing Selected ';
 					}
 					if (maxLabels === 0 && length !== 0) {
 						label = '(' + length + ')';
