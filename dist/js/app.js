@@ -135,95 +135,6 @@
 		}]);
 })();
 (function() {
-	angular.module('isteven-multi-select.filters', [])
-		.filter('isteven', [function(){
-			return function(input, search, ignoreProperties, filterProperties){
-					if(search.name.trim() === ''){
-						return input;
-					}
-					var length = input.length, groups = [], returnArray = [], filterProperties = filterProperties ? filterProperties.split(' ') : ['name'];
-					for (var i = 0; i < length; i++) {
-						//ignoreProperties[0] is tick property and ignoreProperties[1] is group properties
-						if (input[i].hasOwnProperty(ignoreProperties[1])) {
-							if(input[i][ignoreProperties[1]] === true){
-								groups.push({
-									filteredValuesInside: false,
-									returnArrayIndex: returnArray.length	
-								});
-								returnArray.push(input[i]);
-							} else {
-								if(!groups[groups.length - 1].filteredValuesInside){
-									returnArray.splice(groups[groups.length - 1].returnArrayIndex, 1);
-								} else {
-									returnArray.push(input[i]);
-								}
-								groups.pop();
-							}
-						} else {
-							//if(input[i].name.toLowerCase().trim().search(search.name.toLowerCase().trim()) > -1){
-							if(searchObj(input[i], filterProperties, search.name)){
-								returnArray.push(input[i]);
-								for(var j = groups.length - 1; j >= 0; j--){
-									groups[j].filteredValuesInside = true;
-								}
-							};
-						}
-					}
-				return returnArray;
-				
-				function searchObj(obj, parametersToSearch, value){
-					for(var k = 0; k < parametersToSearch.length;k++){
-						if(obj[parametersToSearch[k]].toLowerCase().trim().search(value.toLowerCase().trim()) > -1){
-							return true;
-						}
-					}
-					return false;
-				}
-			}
-		}])
-		.directive('iStevenMultiSelectFilters', ['$sce', function($sce) {
-			var directive = {
-				restrict: 'E',
-				scope: {
-					lang: '=',
-					search: '=',
-					select: '&',
-					selectAll: '&',
-					selectNone: '&',
-					searchChanged: '&',
-					updateFilter: '&',
-					vMinSearchLength: '@'
-				},
-				templateUrl: 'filters/iStevenMultiSelectFilters.html',
-				link: link
-			};
-
-			return directive;
-
-			function link(scope, elem, attrs, ctrl) {
-				
-				scope.helperStatus = {
-					all: true,
-					none: true,
-					reset: true,
-					filter: true
-				};
-				
-				scope.clearClicked = clearClicked;
-				scope.generateHTMLSafeText = generateHTMLSafeText;
-				
-				function generateHTMLSafeText(text){
-					return $sce.trustAsHtml(text);
-				}
-
-				function clearClicked() {
-					scope.search.name = '';
-				}
-
-			}
-		}]);
-})();
-(function() {
 	angular.module('isteven-multi-select', ['isteven-multi-select.filters', 'isteven-multi-select.list', 'isteven-multi-select.off-click'])
 		.directive('iStevenMultiSelect', ['$sce', '$filter', function($sce, $filter) {
 			var directive = {
@@ -413,7 +324,7 @@
 							label += '...(' + (length - i).toString() + ')';
 							break;
 						}
-						label += writeLabel($scope.outputModel[i], true);
+						label += writeLabel($scope.outputModel[i],true, $attrs.buttonLabel ? $attrs.buttonLabel : $attrs.itemLabel);
 						if (i + 1 < length) {
 							label += ', ';
 						}
@@ -440,7 +351,7 @@
 					return i < length ? i : -1;
 				}
 
-				function itemClicked(index, isChecked) {
+				function itemClicked(index,  isChecked) {
 					var found_index = findIndexOfObjectInArrayBasedOnProperty($scope.outputModel, 'array_index', index);
 					if (isChecked) {
 						if (found_index === -1) {
@@ -454,14 +365,14 @@
 					writeButtonLabel();
 				}
 
-				function writeLabel(item, trustAsHtml) {
+				function writeLabel(item, trustAsHtml, itemLabel) {
 
 					if (item.hasOwnProperty($scope.groupProperty)) {
 						return $sce.trustAsHtml(item.name);
 					}
 
 					// type is either 'itemLabel' or 'buttonLabel'
-					var temp = $scope.itemLabel.split(' ');
+					var temp = itemLabel ? itemLabel.split(' ') : $scope.itemLabel.split(' ');
 					var label = '', length = temp.length;
 
 					angular.forEach(temp, function(value, key) {
@@ -522,6 +433,95 @@
 
 				function checkIfGroupFalse(item) {
 					return (!item.hasOwnProperty($scope.groupProperty) || item[$scope.groupProperty]);
+				}
+
+			}
+		}]);
+})();
+(function() {
+	angular.module('isteven-multi-select.filters', [])
+		.filter('isteven', [function(){
+			return function(input, search, ignoreProperties, filterProperties){
+					if(search.name.trim() === ''){
+						return input;
+					}
+					var length = input.length, groups = [], returnArray = [], filterProperties = filterProperties ? filterProperties.split(' ') : ['name'];
+					for (var i = 0; i < length; i++) {
+						//ignoreProperties[0] is tick property and ignoreProperties[1] is group properties
+						if (input[i].hasOwnProperty(ignoreProperties[1])) {
+							if(input[i][ignoreProperties[1]] === true){
+								groups.push({
+									filteredValuesInside: false,
+									returnArrayIndex: returnArray.length	
+								});
+								returnArray.push(input[i]);
+							} else {
+								if(!groups[groups.length - 1].filteredValuesInside){
+									returnArray.splice(groups[groups.length - 1].returnArrayIndex, 1);
+								} else {
+									returnArray.push(input[i]);
+								}
+								groups.pop();
+							}
+						} else {
+							//if(input[i].name.toLowerCase().trim().search(search.name.toLowerCase().trim()) > -1){
+							if(searchObj(input[i], filterProperties, search.name)){
+								returnArray.push(input[i]);
+								for(var j = groups.length - 1; j >= 0; j--){
+									groups[j].filteredValuesInside = true;
+								}
+							};
+						}
+					}
+				return returnArray;
+				
+				function searchObj(obj, parametersToSearch, value){
+					for(var k = 0; k < parametersToSearch.length;k++){
+						if(obj[parametersToSearch[k]].toLowerCase().trim().search(value.toLowerCase().trim()) > -1){
+							return true;
+						}
+					}
+					return false;
+				}
+			}
+		}])
+		.directive('iStevenMultiSelectFilters', ['$sce', function($sce) {
+			var directive = {
+				restrict: 'E',
+				scope: {
+					lang: '=',
+					search: '=',
+					select: '&',
+					selectAll: '&',
+					selectNone: '&',
+					searchChanged: '&',
+					updateFilter: '&',
+					vMinSearchLength: '@'
+				},
+				templateUrl: 'filters/iStevenMultiSelectFilters.html',
+				link: link
+			};
+
+			return directive;
+
+			function link(scope, elem, attrs, ctrl) {
+				
+				scope.helperStatus = {
+					all: true,
+					none: true,
+					reset: true,
+					filter: true
+				};
+				
+				scope.clearClicked = clearClicked;
+				scope.generateHTMLSafeText = generateHTMLSafeText;
+				
+				function generateHTMLSafeText(text){
+					return $sce.trustAsHtml(text);
+				}
+
+				function clearClicked() {
+					scope.search.name = '';
 				}
 
 			}

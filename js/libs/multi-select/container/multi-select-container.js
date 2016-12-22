@@ -188,7 +188,7 @@
 							label += '...(' + (length - i).toString() + ')';
 							break;
 						}
-						label += writeLabel($scope.outputModel[i], true);
+						label += writeLabel($scope.outputModel[i],true, $attrs.buttonLabel ? $attrs.buttonLabel : $attrs.itemLabel);
 						if (i + 1 < length) {
 							label += ', ';
 						}
@@ -215,7 +215,7 @@
 					return i < length ? i : -1;
 				}
 
-				function itemClicked(index, isChecked) {
+				function itemClicked(index,  isChecked) {
 					var found_index = findIndexOfObjectInArrayBasedOnProperty($scope.outputModel, 'array_index', index);
 					if (isChecked) {
 						if (found_index === -1) {
@@ -229,14 +229,14 @@
 					writeButtonLabel();
 				}
 
-				function writeLabel(item, trustAsHtml) {
+				function writeLabel(item, trustAsHtml, itemLabel) {
 
 					if (item.hasOwnProperty($scope.groupProperty)) {
 						return $sce.trustAsHtml(item.name);
 					}
 
 					// type is either 'itemLabel' or 'buttonLabel'
-					var temp = $scope.itemLabel.split(' ');
+					var temp = itemLabel ? itemLabel.split(' ') : $scope.itemLabel.split(' ');
 					var label = '', length = temp.length;
 
 					angular.forEach(temp, function(value, key) {
