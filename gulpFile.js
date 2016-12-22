@@ -61,7 +61,8 @@ gulp.task('templates', function() {
 			cdata: true
 		}))
 		.pipe(templateCache('templates.js', {
-			standalone: true
+			module: 'isteven-multi-select',
+			standalone: false
 		}))
 		.pipe(gulp.dest('dist/js'));
 });

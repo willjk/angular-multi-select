@@ -1,5 +1,5 @@
 (function() {
-	angular.module('isteven-multi-select', ['isteven-multi-select.filters', 'isteven-multi-select.list', 'isteven-multi-select.off-click', 'templates'])
+	angular.module('isteven-multi-select', ['isteven-multi-select.filters', 'isteven-multi-select.list', 'isteven-multi-select.off-click'])
 		.directive('iStevenMultiSelect', ['$sce', '$filter', function($sce, $filter) {
 			var directive = {
 				restrict: 'E',
