@@ -41,6 +41,7 @@ gulp.task('appScripts', function() {
 	return gulp.src([
 			'!gulpfile.js',
 			'!**/gulpfile.js',
+			'!js/libs/multi-select/isteven-multi-select.js',
 			'js/libs/multi-select/**/*.js',
 			'js/libs/multi-select/*.js',
 			//'js/*.js',
