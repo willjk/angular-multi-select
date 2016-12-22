@@ -1,8 +1,8 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-	<link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Lato:400,900|Roboto+Slab:400,700' type='text/css'>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link rel='stylesheet' href="http://fonts.googleapis.com/css?family=Lato:400,900|Roboto+Slab:400,700" type="text/css">
 	<link rel='stylesheet' href="../../css/bootstrap.min.css" />
 	<link rel='stylesheet' href="../../css/isteven-multi-select.css" />
 	<link rel='stylesheet' href="../../css/style.css" />
@@ -15,8 +15,8 @@
 	<script src="jquery.min.js"></script>
 	<script src="bootstrap.min.js"></script>
 	<script src="angular.min.js"></script>
-	<script src="../../../dist/js/templates.js"></script>
-	<script src="../../../dist/js/app.js"></script>
+	<script src="../../dist/js/templates.js"></script>
+	<script src="../../dist/js/app.js"></script>
 </head>
 
 <body ng-app="myApp">
@@ -25,7 +25,7 @@
 			<div class="row">
 				<div class="col-xs-6">
 					<i-steven-multi-select input-model="inputModel" output-model="outputModel" hide-select="{{hideSelect}}" is-disabled="isDisabled" item-label="icon name maker" group-property="msGroup"
-		tick-property="selected" filter-properties="name maker" max-labels="{{maxLabels}}" disable-property="disabled" list-css="list-overflow" orientation="v"></i-steven-multi-select-container>
+		tick-property="selected" filter-properties="name maker" max-labels="{{maxLabels}}" disable-property="disabled" list-css="list-overflow" orientation="v"></i-steven-multi-select>
 				</div>
 				<div class="col-xs-6">
 					<button type="button" class="btn" ng-click="inverseHideSelect()">Toggle hiding select</button>
@@ -40,6 +40,7 @@
 <script>
 	angular.module('myApp', ['isteven-multi-select'])
 		.controller('myController', function($scope, $timeout){
+			debugger;
 			
 			$scope.itemLabel = 'icon name maker';
 			
