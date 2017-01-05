@@ -325,6 +325,7 @@
 				$scope.$watch('inputModel', function(nVal) {
 					if (nVal !== undefined) {
 						$scope.calculateSpacingBasedOnGrouping();
+						writeButtonLabel();
 					}
 				}, true);
 
