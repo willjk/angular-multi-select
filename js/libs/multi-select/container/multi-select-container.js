@@ -227,6 +227,7 @@
 						$scope.outputModel.splice(found_index, 1);
 					}
 					writeButtonLabel();
+					$scope.onItemClick();
 				}
 
 				function writeLabel(item, trustAsHtml, itemLabel) {
