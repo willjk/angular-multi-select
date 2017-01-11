@@ -53,6 +53,7 @@
 				$scope.tabIndex = 0;
 				$scope.filteredModel = [];
 				$scope.maxHeight = $attrs.hasOwnProperty('maxHeight') ? $attrs.maxHeight : '';
+				$scope.onSearchChange = $scope.onSearchChange ? $scope.onSearchChange : onSearchChange;
 				$scope.helperStatus = {
 					all: true,
 					none: true,
@@ -220,7 +221,7 @@
 					var found_index = findIndexOfObjectInArrayBasedOnProperty($scope.outputModel, 'array_index', index);
 					if (isChecked) {
 						if (found_index === -1) {
-							var copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties)[index]);
+							var copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties)[index]);
 							copy.array_index = index;
 							$scope.outputModel.push(copy);
 						}
