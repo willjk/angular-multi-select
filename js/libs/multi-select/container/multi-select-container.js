@@ -117,12 +117,12 @@
 				}
 
 				function selectAll() {
-					selectedGroupProperty(0, true, true, false);
+					selectedGroupProperty(0, true, true);
 					$scope.onSelectAll();
 				}
 
 				function selectNone() {
-					selectedGroupProperty(0, true, false, false);
+					selectedGroupProperty(0, true, false);
 					$scope.onSelectNone();
 				};
 				
@@ -135,8 +135,8 @@
 				function selectedGroupProperty(inputModelIndex, force, forceValue, ignoreFilter) {
 					$scope.filteredModel = [];
 					force = force !== undefined ? force : false;
-					ignoreFilter = ignoreFilter !== undefined ? ignoreFilter : false;
-					var filteredInputModel = ignoreFilter ? $filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties) : $scope.inputModel,
+					ignoreFilter = ignoreFilter !== undefined ? ignoreFilter : true;
+					var filteredInputModel = ignoreFilter ? $filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties) : $scope.inputModel,
 						length = filteredInputModel.length, groupNestCount = 0, endGroupIndex = inputModelIndex, allTicked = true;
 					for (var i = inputModelIndex; i < length; i++) {
 						if (force) { //we are forcing. no need to loop through this.
