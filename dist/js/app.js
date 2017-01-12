@@ -342,12 +342,12 @@
 				}
 
 				function selectAll() {
-					selectedGroupProperty(0, true, true, true);
+					selectedGroupProperty(0, true, true, false);
 					$scope.onSelectAll();
 				}
 
 				function selectNone() {
-					selectedGroupProperty(0, true, false, true);
+					selectedGroupProperty(0, true, false, false);
 					$scope.onSelectNone();
 				};
 				
@@ -440,7 +440,7 @@
 							break;
 						}
 					}
-					return i < length ? i : -1;
+					return i <= length - 1 ? i : -1;
 				}
 
 				function itemClicked(index,  isChecked) {
