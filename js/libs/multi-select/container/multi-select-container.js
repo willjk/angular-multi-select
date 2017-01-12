@@ -117,12 +117,12 @@
 				}
 
 				function selectAll() {
-					selectedGroupProperty(0, true, true);
+					selectedGroupProperty(0, true, true, true);
 					$scope.onSelectAll();
 				}
 
 				function selectNone() {
-					selectedGroupProperty(0, true, false);
+					selectedGroupProperty(0, true, false, true);
 					$scope.onSelectNone();
 				};
 				
@@ -132,10 +132,11 @@
 
 				//to lazy to optimize. can be optimized later
 				//when a grouped item is selected it turns selects or deselects all values within that group
-				function selectedGroupProperty(inputModelIndex, force, forceValue) {
+				function selectedGroupProperty(inputModelIndex, force, forceValue, ignoreFilter) {
 					$scope.filteredModel = [];
 					force = force !== undefined ? force : false;
-					var filteredInputModel = $filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties),
+					ignoreFilter = ignoreFilter !== undefined ? ignoreFilter : false;
+					var filteredInputModel = ignoreFilter ? $filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties) : $scope.inputModel,
 						length = filteredInputModel.length, groupNestCount = 0, endGroupIndex = inputModelIndex, allTicked = true;
 					for (var i = inputModelIndex; i < length; i++) {
 						if (force) { //we are forcing. no need to loop through this.
