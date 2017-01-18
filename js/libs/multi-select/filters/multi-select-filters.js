@@ -37,7 +37,7 @@
 				
 				function searchObj(obj, parametersToSearch, value){
 					for(var k = 0; k < parametersToSearch.length;k++){
-						if(obj.hasOwnProperty(parametersToSearch[k]) && obj[parametersToSearch[k]].toLowerCase().trim().search(value.toLowerCase().trim()) > -1){
+						if(obj.hasOwnProperty(parametersToSearch[k]) && obj[parametersToSearch[k]] && obj[parametersToSearch[k]].toLowerCase().trim().search(value.toLowerCase().trim()) > -1){
 							return true;
 						}
 					}
