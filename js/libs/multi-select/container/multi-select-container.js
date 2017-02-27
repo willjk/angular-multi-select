@@ -147,12 +147,12 @@
 				}
 
 				function returnIndexFromInputModel(obj) {
-					var i, j, returnIndex,
-					isProp = true;
+					var i, j, returnIndex, isProp,
 					len = $scope.inputModel.length,
 					props = $scope.filterProperties.split(' '),
 					propsLength = props.length;
 					for(i = 0; i < len; i++) {
+						isProp = true;
 						for(j = 0; j < propsLength; j++) {
 							if($scope.inputModel[i][props[j]] !== obj[props[j]]) {
 								isProp = false;
