@@ -316,7 +316,16 @@
 				$scope.offClick = offClick;
 
 
-				$scope.writeButtonLabel();
+				init();
+
+
+				function init() {
+					createArrayIndexForOutputModelOnInitialization();
+					$scope.writeButtonLabel();
+				}
+
+
+				
 
 				$attrs.$observe('maxLabels', function(nVal) {
 					$scope.maxLabels = $attrs.maxLabels;
@@ -353,6 +362,34 @@
 				
 				function isItemDisabled(item){
 					return ($scope.isDisabled == 'true' || (item.hasOwnProperty($scope.disableProperty) && item[$scope.disableProperty] === true))
+				}
+
+				function createArrayIndexForOutputModelOnInitialization() {
+					var len = $scope.outputModel.length;
+					for(var i = 0; i < len; i++) {
+						$scope.outputModel[i].array_index = returnIndexFromInputModel($scope.outputModel[i]);
+					}
+				}
+
+				function returnIndexFromInputModel(obj) {
+					var i, j, returnIndex,
+					isProp = true;
+					len = $scope.inputModel.length,
+					props = $scope.filterProperties.split(' '),
+					propLength = props.length;
+					for(i = 0; i < len; i++) {
+						for(j = 0; j < propsLength; j++) {
+							if($scope.inputModel[props[j]] !== obj[props[j]]) {
+								isProp = false;
+								break;
+							}
+						}
+						if(isProp) {
+							returnIndex = i;
+							break;
+						}
+					}
+					return returnIndex;
 				}
 
 				//to lazy to optimize. can be optimized later
