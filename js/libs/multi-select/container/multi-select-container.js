@@ -151,7 +151,7 @@
 					isProp = true;
 					len = $scope.inputModel.length,
 					props = $scope.filterProperties.split(' '),
-					propLength = props.length;
+					propsLength = props.length;
 					for(i = 0; i < len; i++) {
 						for(j = 0; j < propsLength; j++) {
 							if($scope.inputModel[props[j]] !== obj[props[j]]) {
