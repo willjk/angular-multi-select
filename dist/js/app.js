@@ -368,6 +368,7 @@
 					var len = $scope.outputModel.length;
 					for(var i = 0; i < len; i++) {
 						$scope.outputModel[i].array_index = returnIndexFromInputModel($scope.outputModel[i]);
+						$scope.inputModel[$scope.outputModel[i].array_index][$scope.tickProperty] = true;
 					}
 				}
 
