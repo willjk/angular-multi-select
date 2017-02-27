@@ -62,7 +62,7 @@
 						ctrl.selectedGroupProperty(parseInt(attrs.index));
 					} else if(!scope.item.hasOwnProperty(scope.groupProperty)){
 						scope.item[scope.tickProperty] = !scope.item[scope.tickProperty];
-						ctrl.itemClicked(parseInt(attrs.index), scope.item[scope.tickProperty]);
+						ctrl.itemClicked(parseInt(attrs.index), scope.item[scope.tickProperty], parseInt(attrs.filteredIndex));
 					}
 				}
 

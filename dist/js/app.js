@@ -111,7 +111,7 @@
 						ctrl.selectedGroupProperty(parseInt(attrs.index));
 					} else if(!scope.item.hasOwnProperty(scope.groupProperty)){
 						scope.item[scope.tickProperty] = !scope.item[scope.tickProperty];
-						ctrl.itemClicked(parseInt(attrs.index), scope.item[scope.tickProperty]);
+						ctrl.itemClicked(parseInt(attrs.index), scope.item[scope.tickProperty], parseInt(attrs.filteredIndex));
 					}
 				}
 
@@ -426,7 +426,7 @@
 
 				function findObjectInArrayBasedOnProperty(array, property, value) {
 
-					var results = array.filter(function(obj) {
+					var results = array.filter(function(obj) { 
 						return obj[property] == value;
 					});
 
@@ -443,11 +443,11 @@
 					return i <= length - 1 ? i : -1;
 				}
 
-				function itemClicked(index,  isChecked) {
+				function itemClicked(index,  isChecked, filteredIndex) {
 					var found_index = findIndexOfObjectInArrayBasedOnProperty($scope.outputModel, 'array_index', index);
 					if (isChecked) {
 						if (found_index === -1) {
-							var copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties)[index]);
+							var copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties)[filteredIndex]);
 							copy.array_index = index;
 							$scope.outputModel.push(copy);
 						}
