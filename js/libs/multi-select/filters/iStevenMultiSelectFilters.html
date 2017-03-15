@@ -4,9 +4,9 @@
 		</button>
 		<button type="button" class="helperButton" ng-if="!isDisabled && helperStatus.none" ng-click="selectNone();" ng-bind-html="generateHTMLSafeText(lang.selectNone)">
 		</button>
-		<button type="button" class="helperButton reset" ng-if="!isDisabled && helperStatus.reset" ng-click="select( reset, $event );"
+		<!--<button type="button" class="helperButton reset" ng-if="!isDisabled && helperStatus.reset" ng-click="select( reset, $event );"
 		ng-bind-html="generateHTMLSafeText(lang.reset)">
-		</button>
+		</button>-->
 	</div>
 	<div class="line" style="position:relative" ng-if="helperStatus.filter">
 		<input placeholder="{{::lang.search}}" ng-change="searchChanged()" type="text" ng-click="select( 'filter', $event )" ng-model="search.name"

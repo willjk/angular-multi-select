@@ -260,7 +260,12 @@
 					var found_index = findIndexOfObjectInArrayBasedOnProperty($scope.outputModel, 'array_index', index);
 					if (isChecked) {
 						if (found_index === -1) {
-							var copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties)[filteredIndex]);
+							var copy;
+							if(filteredIndex) {
+								copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties)[filteredIndex]);
+							} else {
+								copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties));
+							}
 							copy.array_index = index;
 							$scope.outputModel.push(copy);
 						}
