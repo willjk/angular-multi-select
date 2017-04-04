@@ -261,7 +261,7 @@
 					if (isChecked) {
 						if (found_index === -1) {
 							var copy;
-							if(filteredIndex) {
+							if(filteredIndex >= 0) {
 								copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties)[filteredIndex]);
 							} else {
 								copy = angular.copy($filter('isteven')($scope.inputModel, $scope.search, $scope.ignoreProperties, $scope.filterProperties));
@@ -284,13 +284,13 @@
 
 					// type is either 'itemLabel' or 'buttonLabel'
 					var temp = itemLabel ? itemLabel.split(' ') : $scope.itemLabel.split(' ');
-					var label = '', length = temp.length;
+					var label = '', length = temp.length;					
 
 					angular.forEach(temp, function(value, key) {
 						item[value] && (label += '&nbsp;' + value.split('.').reduce(function(prev, current) {
 							return prev[current];
 						}, item));
-					});
+					});				
 
 					if (trustAsHtml == true) {
 						return label;
